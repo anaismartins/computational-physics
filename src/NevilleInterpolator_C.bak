@@ -1,0 +1,44 @@
+#include "NevilleInterpolator.h"
+
+NevilleInterpolator::NevilleInterpolator(int N, double *x, double *y, TF1* fF0) : DataPoints (N, x, y){
+	fInterpolator = this.Interpolate;
+	F0 = new TF1(*fF0);
+	cInterpolator = new TCanvas;
+}
+
+NevilleInterpolator::NevilleInterpolator(const NevilleInterpolator& NI){
+
+	fInterpolator = NI.fInterpolator;
+	F0 = NI.F0;
+	cInterpolator = NI.cInterpolator;
+
+}
+
+double NevilleInterpolator::Interpolate(double xval) const{
+
+//Neville algorithm
+
+	double* yp = new double[N];
+	for (int i = 0; i < N; i++){
+
+		yp[i] = y[i]; // auxiliar vector
+
+	}
+
+	for (int k = 1; k < N; k++) // use extreme x-values
+		for (int i = 0; i < N - k; i++)
+			yp[i] = ((xval - x[i+k]) * yp[i] - (xval - x[i]) * yp[i+1]) / (x[i] - x[i+k]);
+
+	double A = yp[0];
+	delete [] yp;
+	return A;
+
+}
+
+void Draw(){
+
+	gPoints->Draw();
+	F0->Draw();
+	cInterpolator->Update();
+
+}

@@ -1,0 +1,25 @@
+#include "TGraph.h"
+#include <string>
+
+class DataPoints {
+	
+public:
+
+	DataPoints();
+	DataPoints(unsigned int, const double*, const double*);
+	virtual ~DataPoints();
+
+	virtual double Interpolate(double xval) const {return 0.;};
+	virtual void Draw() const;
+	virtual const TGraph& GetGraph() const;
+	virtual void Print(std::string FILE="");
+
+	/*friend ostream& operator<< (ostream&, const DataPoints&);*/
+
+protected:
+
+	int N; // number of data points
+	double *x, *y; // arrays
+	TGraph *gPoints; // graph with data points
+
+};

@@ -1,0 +1,41 @@
+#include "DataPoints.h"
+
+//constructors
+
+DataPoints::DataPoints(){
+
+	N = 0;
+	x = nullptr;
+	y = nullptr;
+	gPoints = nullptr;
+
+}
+
+DataPoints::DataPoints(unsigned int n, const double* X, const double* Y){
+
+	N = n;
+	x = new double[n];
+	y = new double[n];
+
+	for (int i = 0; i < n; i++){
+		x[i] = X[i];
+		y[i] = Y[i];
+	}
+
+	gPoints = new TGraph(n, x, y);
+
+}
+
+DataPoints::~DataPoints(){
+
+	if (x != nullptr)
+		delete [] x;
+	delete x;
+	if (y != nullptr)
+		delete [] y;
+	delete y;
+	if (gPoints != nullptr)
+		delete [] gPoints;
+	delete gPoints;
+
+}

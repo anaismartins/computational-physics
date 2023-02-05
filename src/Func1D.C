@@ -1,0 +1,41 @@
+#include "Func1D.h"
+
+Func1D::Func1D(const TF1 *fp){
+	
+	if (fp){
+		f = new TF1(*fp);		
+		Settings();
+	}
+
+}
+
+Func1D::~Func1D(){
+
+  //	if (f)
+	  //	delete f;
+
+}
+
+void Func1D::Draw() const{
+
+	TApplication A("A", 0, 0);
+	TCanvas c("c", "Func1D canvas", 0, 0, 1000, 800);
+	f->Draw();
+	c.Update();
+	A.Run();
+
+}
+
+double Func1D::Eval(double xval) const{
+
+	return f->Eval(xval);
+
+}
+
+void Func1D::Settings(){
+
+	f->SetNpx(1000);
+	f->SetLineColor(38);
+	f->SetLineWidth(4);
+
+}

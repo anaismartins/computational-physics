@@ -1,0 +1,41 @@
+#include "NevilleInterpolator.h"
+
+/*NevilleInterpolator::NevilleInterpolator(const NevilleInterpolator& NI){
+
+  fInterpolator = NI.fInterpolator;
+  F0 = NI.F0;
+  cInterpolator = NI.cInterpolator;
+
+  }*/
+
+NevilleInterpolator::NevilleInterpolator(int fN, double *fx, double *fy) : DataPoints(fN, fx, fy) {
+  FInterpolator = new TF1("FInterpolator", this, &NevilleInterpolator::fInterpolator,
+			  -0.1 ,3.1, 0, "NevilleInterpolator", "fInterpolator");
+  DataPoints::Print();
+  F0=NULL;
+}
+
+double NevilleInterpolator::Interpolate(double xval) {
+  // Neville algorithm
+  double* yp = new double[N];
+  for (int i=0; i<N; i++) {
+    yp[i] = y[i]; // auxiliar vector
+  }
+  for (int k=1; k<N; k++) { // use extreme x-values
+    for (int i=0; i<N-k; i++) {
+      yp[i] = (
+	       (xval-x[i+k])*yp[i] -
+	       (xval-x[i])*yp[i+1]) / (x[i]-x[i+k]);
+    }
+  }
+  double A = yp[0];
+  delete [] yp;
+  return A;
+}
+
+void Draw() {
+  DataPoints::Draw();
+  FInterpolator->SetLineColor(38);
+  FInterpolator->SetLineWidth(4);
+  FInterpolator->Draw("same");
+}

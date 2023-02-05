@@ -1,0 +1,30 @@
+#ifndef __NevilleInterpolator__
+#define __NevilleInterpolator__
+
+#include "DataPoints.h"
+
+#include "TH1.h"
+
+class NevilleInterpolator : public DataPoints {
+  
+public:
+  NevilleInterpolator(int N=0, double *x=NULL, double *y=NULL);
+  ~NevilleInterpolator() {;}
+  
+  // redefine Interpolate method
+  double Interpolate(double x);
+  void Draw();
+  
+  void SetFunction(TF1* f=nullptr) { // underlying function
+    if (f) F0=f;
+  }
+  
+private:
+  double fInterpolator(double *fx, double *par) {
+    return Interpolate(fx[0]);
+  }
+  TF1* FInterpolator;
+  TF1* F0; // underlying function from where points were extracted
+};
+
+#endif
